@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Roman Perevala](https://up.htmlacademy.ru/javascript/11/user/8212).
-* Наставник: `Неизвестно`.
+* Наставник: [Вениамин Тамбурин](https://htmlacademy.ru/profile/id552259).
 
 ---
 
