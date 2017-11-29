@@ -27,31 +27,13 @@ var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-// Generate array with unique number
-var getUniqueIntArray = function (min, max, count) {
-  var numbersArray = [];
-  var randomInt = 1;
-
-  while (numbersArray.length < count) {
-    randomInt = getRandomInt(min, max);
-    if (numbersArray.indexOf(randomInt) === -1) {
-      numbersArray.push(randomInt);
-    }
-  }
-
-  return numbersArray;
-};
-
 // Used to shuffle array order https://learn.javascript.ru/task/shuffle-array
 var compareRandom = function () {
   return Math.random() - 0.5;
 };
 
-// Avatars array
-var avatarNums = getUniqueIntArray(1, 8, POST_NUM);
-
 // Generates post data array
-var getPosts = function (count, avatars, titles, types, checkins, checkouts, features) {
+var getPosts = function (count, titles, types, checkins, checkouts, features) {
   var posts = [];
 
   // Shuffle Titles array
@@ -81,7 +63,7 @@ var getPosts = function (count, avatars, titles, types, checkins, checkouts, fea
 
     posts[i] = {
       author: {
-        avatar: 'img/avatars/user' + '0' + avatars[i] + '.png'
+        avatar: 'img/avatars/user' + '0' + (i + 1) + '.png'
       },
       offer: {
         title: titles[i],
@@ -107,7 +89,7 @@ var getPosts = function (count, avatars, titles, types, checkins, checkouts, fea
 };
 
 // Get Posts
-var posts = getPosts(POST_NUM, avatarNums, POST_TITLES, POST_TYPES, POST_CHECKINS, POST_CHECKOUTS, POST_FEATURES);
+var posts = getPosts(POST_NUM, POST_TITLES, POST_TYPES, POST_CHECKINS, POST_CHECKOUTS, POST_FEATURES);
 
 // Create Marker
 var createMapMarker = function (post) {
