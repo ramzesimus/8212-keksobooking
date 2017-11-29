@@ -5,7 +5,11 @@ var MAP_MARKER_HEIGHT = 54;
 var MAP_MARKER_WIDTH = 40;
 var POST_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var POST_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var POST_TYPES = ['flat', 'house', 'bungalo'];
+var POST_TYPES = {
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
+};
 var POST_CHECKINS = ['12:00', '13:00', '14:00'];
 var POST_CHECKOUTS = ['12:00', '13:00', '14:00'];
 
@@ -32,16 +36,23 @@ var compareRandom = function () {
   return Math.random() - 0.5;
 };
 
+// Get random key in Array
+var getRandomArrayKeys = function (arr) {
+  return arr[getRandomInt(0, arr.length - 1)];
+};
+
+// Shuffle keys in Object
+var getRandomObjectKeys = function (obj) {
+  var keys = Object.keys(obj);
+  return obj[getRandomArrayKeys(keys)];
+};
+
 // Generates post data array
 var getPosts = function (count, titles, types, checkins, checkouts, features) {
   var posts = [];
 
   // Shuffle Titles array
   titles.sort(compareRandom);
-
-  var typesSize = types.length - 1;
-  var checkinsSize = checkins.length - 1;
-  var checkoutsSize = checkouts.length - 1;
 
   for (var i = 0; i < count; i++) {
 
@@ -69,11 +80,11 @@ var getPosts = function (count, titles, types, checkins, checkouts, features) {
         title: titles[i],
         address: locationX + ', ' + locationY,
         price: getRandomInt(1000, 1000000),
-        type: types[getRandomInt(0, typesSize)],
+        type: getRandomObjectKeys(types),
         rooms: getRandomInt(1, 5),
         guests: getRandomInt(1, 10),
-        checkin: checkins[getRandomInt(0, checkinsSize)],
-        checkout: checkouts[getRandomInt(0, checkoutsSize)],
+        checkin: getRandomArrayKeys(checkins),
+        checkout: getRandomArrayKeys(checkouts),
         features: featuresNew,
         description: '',
         photos: []
@@ -118,21 +129,6 @@ generateMapMarkers(posts, mapPinsContainer);
 var createMapCard = function (post) {
   var mapCardElement = mapCardTemplate.cloneNode(true);
 
-  var offerTypeString = '';
-
-  // Replace origin Offer Type with string
-  switch (post.offer.type) {
-    case 'flat':
-      offerTypeString = 'Квартира';
-      break;
-    case 'bungalo':
-      offerTypeString = 'Бунгало';
-      break;
-    case 'house':
-      offerTypeString = 'Дом';
-      break;
-  }
-
   // Features popup
   var featuresContainer = mapCardElement.querySelector('.popup__features');
   featuresContainer.innerHTML = '';
@@ -140,7 +136,7 @@ var createMapCard = function (post) {
   mapCardElement.querySelector('h3').textContent = post.offer.title;
   mapCardElement.querySelector('h3 + p > small').textContent = post.offer.address;
   mapCardElement.querySelector('.popup__price').innerHTML = post.offer.price + '&#x20bd;/ночь';
-  mapCardElement.querySelector('h4').textContent = offerTypeString;
+  mapCardElement.querySelector('h4').textContent = post.offer.type;
   mapCardElement.querySelector('h4 + p').textContent = post.offer.rooms + ' для ' + post.offer.guests + ' гостей';
   mapCardElement.querySelector('h4 + p + p').textContent = 'Заезд после ' + post.offer.checkin + ' , выезд до ' + post.offer.checkout;
   for (var i = 0; i < post.offer.features.length; i++) {
