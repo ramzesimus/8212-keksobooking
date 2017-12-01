@@ -13,9 +13,10 @@ var POST_TYPES = {
 var POST_CHECKINS = ['12:00', '13:00', '14:00'];
 var POST_CHECKOUTS = ['12:00', '13:00', '14:00'];
 
+var ESC_KEYCODE = 27;
+
 // Show map
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
 
 // Map pins Container
 var mapPinsContainer = document.querySelector('.map__pins');
@@ -25,6 +26,7 @@ var pinTemplate = document.querySelector('template').content.querySelector('.map
 
 // Map Card Template
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
+var mapCardElement = mapCardTemplate.cloneNode(true);
 
 // Get random number
 var getRandomInt = function (min, max) {
@@ -123,11 +125,12 @@ var generateMapMarkers = function (markers, target) {
   return target.appendChild(fragment);
 };
 
+// generate markers
 generateMapMarkers(posts, mapPinsContainer);
+
 
 // Create Map Card
 var createMapCard = function (post) {
-  var mapCardElement = mapCardTemplate.cloneNode(true);
 
   // Features popup
   var featuresContainer = mapCardElement.querySelector('.popup__features');
@@ -149,13 +152,101 @@ var createMapCard = function (post) {
 };
 
 // Output Map Card
-var outputMapCard = function () {
-  var mapCardFragment = document.createDocumentFragment();
-  mapCardFragment.appendChild(createMapCard(posts[0]));
-
+var outputMapCard = function (arrIndex) {
   var target = document.querySelector('.map');
+  var mapCardFragment = document.createDocumentFragment();
+  mapCardFragment.appendChild(createMapCard(posts[arrIndex]));
 
   return target.insertBefore(mapCardFragment, target.querySelector('.map__filters-container'));
 };
 
-outputMapCard();
+outputMapCard(0);
+
+
+// Map Pin Main
+var mapPinMain = document.querySelector('.map__pin--main');
+var noticeForm = document.querySelector('.notice__form');
+var popup = document.querySelector('.popup');
+var popupClose = document.querySelector('.popup__close');
+
+// Disable all fields by setting up 'disabled' on fieldset tags
+var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
+noticeFormFieldsets.forEach(function (elem) {
+  elem.disabled = true;
+});
+
+var hideElement = function (target) {
+  target.classList.add('hidden');
+};
+
+var showElement = function (target) {
+  target.classList.remove('hidden');
+};
+
+var removeActivePins = function (arr) {
+  arr.forEach(function (elem) {
+    elem.classList.remove('map__pin--active');
+  });
+};
+
+var onPopupEscPress = function (e) {
+  if (e.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+// Find all the pins excepts the main one
+var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+mapPins.forEach(function (elem) {
+  hideElement(elem);
+});
+
+// Hide Popup by default
+hideElement(popup);
+
+// Activate map
+var activateMap = function () {
+  // show map
+  map.classList.remove('map--faded');
+
+  // activate notice form
+  noticeForm.classList.remove('notice__form--disabled');
+
+  // make all fields activated
+  noticeFormFieldsets.forEach(function (elem) {
+    elem.disabled = false;
+  });
+
+  /*
+   * Show all markers
+   * show popup
+   * add active class for map markers on click
+   */
+  mapPins.forEach(function (elem, i) {
+    showElement(elem);
+
+    elem.addEventListener('click', function () {
+      removeActivePins(mapPins);
+      showElement(popup);
+      elem.classList.add('map__pin--active');
+      outputMapCard(i);
+      document.addEventListener('keydown', onPopupEscPress);
+    });
+  });
+};
+
+// Activate map on mouseup
+mapPinMain.addEventListener('mouseup', activateMap);
+
+/*
+ * Close Popup
+ * remove all active pins
+ * remove listener onPopupEscPress
+ */
+var closePopup = function () {
+  hideElement(popup);
+  removeActivePins(mapPins);
+
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+popupClose.addEventListener('click', closePopup);
