@@ -284,9 +284,7 @@ var syncFormControlMinValues = function (element, value) {
 // Synchronize Form Controls
 var syncFormControls = function (firstControl, secondControl, firstOptions, secondOptions, callbackFunction) {
   firstControl.addEventListener('change', function () {
-    var firstControlValue = firstControl.value;
-    var indexOfValue = firstOptions.indexOf(firstControlValue);
-
+    var indexOfValue = firstOptions.indexOf(firstControl.value);
     callbackFunction(secondControl, secondOptions[indexOfValue]);
   });
 };
