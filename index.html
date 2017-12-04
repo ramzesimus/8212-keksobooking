@@ -5,6 +5,30 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <title>Keksobooking</title>
+
+  <style>
+    .map::before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100px;
+      background-color: red;
+      height: 1px;
+    }
+
+    .map::after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 500px;
+      background-color: red;
+      height: 1px;
+    }
+  </style>
 </head>
 <body>
 
@@ -107,7 +131,7 @@
 
       <fieldset class="form__element form__element--wide">
         <label for="address">Адрес</label>
-        <input id="address" name="address" type="text" value="100,100" required readonly>
+        <input id="address" name="address" type="text" required readonly>
       </fieldset>
 
       <fieldset class="form__element">
