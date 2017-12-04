@@ -81,6 +81,7 @@
    * Move Main Pin
    */
   var formControlAddress = document.querySelector('#address');
+  mapPinMain.style.zIndex = 2;
 
   var dragPinLimits = {
     minX: 0,
@@ -96,7 +97,7 @@
   };
 
   // Set initial Main Pin coordinates as value for Address Field
-  formControlAddress.value = 'x: ' + formControlAddressCoords.x + ', ' + 'y: ' + formControlAddressCoords.y;
+  formControlAddress.value = 'x: ' + formControlAddressCoords.x + ', ' + 'y: ' + (formControlAddressCoords.y + MAP_PIN_SIZES.height / 2);
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
