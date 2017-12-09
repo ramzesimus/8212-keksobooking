@@ -30,17 +30,10 @@
   };
 
   // Synchronize Form Controls
-  var syncFormControls = function (firstControl, secondControl, firstOptions, secondOptions, callbackFunction) {
-    firstControl.addEventListener('change', function () {
-      var indexOfValue = firstOptions.indexOf(firstControl.value);
-      callbackFunction(secondControl, secondOptions[indexOfValue]);
-    });
-  };
-
-  syncFormControls(formControlTimein, formControlTimeout, FORM_CHECKINS, FORM_CHECKOUTS, syncFormControlValues);
-  syncFormControls(formControlTimeout, formControlTimein, FORM_CHECKOUTS, FORM_CHECKINS, syncFormControlValues);
-  syncFormControls(formControlType, formControlPrice, FORM_TYPES, FORM_TYPES_MIN_PRICES, syncFormControlMinValues);
-  syncFormControls(formControlRoomNumber, formControlCapacity, FORM_ROOM_NUMBERS, FORM_ROOM_CAPACITIES, syncFormControlValues);
+  window.synchronizeFields(formControlTimein, formControlTimeout, FORM_CHECKINS, FORM_CHECKOUTS, syncFormControlValues);
+  window.synchronizeFields(formControlTimeout, formControlTimein, FORM_CHECKOUTS, FORM_CHECKINS, syncFormControlValues);
+  window.synchronizeFields(formControlType, formControlPrice, FORM_TYPES, FORM_TYPES_MIN_PRICES, syncFormControlMinValues);
+  window.synchronizeFields(formControlRoomNumber, formControlCapacity, FORM_ROOM_NUMBERS, FORM_ROOM_CAPACITIES, syncFormControlValues);
 
 
   // Custom Validation
