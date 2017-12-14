@@ -24,36 +24,43 @@
     elem.disabled = true;
   });
 
-  // Find all the pins except the main one
-  var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-  mapPins.forEach(function (elem) {
-    window.util.hideElement(elem);
-  });
-
   // Activate map
-  var activateMap = function () {
-    // show map
-    map.classList.remove('map--faded');
+  window.map = {
 
-    // activate notice form
-    noticeForm.classList.remove('notice__form--disabled');
+    activateMap: function () {
 
-    // make all fields activated
-    noticeFormFieldsets.forEach(function (elem) {
-      elem.disabled = false;
-    });
+      // show map
+      map.classList.remove('map--faded');
 
-    // show all pins
-    mapPins.forEach(function (elem) {
-      window.util.showElement(elem);
-    });
+      // activate notice form
+      noticeForm.classList.remove('notice__form--disabled');
 
-    // show map card
-    window.showCard(mapPins, window.card.getMapCard);
+      // make all fields activated
+      noticeFormFieldsets.forEach(function (elem) {
+        elem.disabled = false;
+      });
+
+      // show all pins
+      window.pin.pinsList.forEach(function (elem) {
+        window.util.showElement(elem);
+      });
+    }
   };
 
-  // Activate map on mouseup
-  mapPinMain.addEventListener('mouseup', activateMap);
+
+  /*
+   * Generate pins, show map and cards if data loaded
+   */
+  var onSuccessLoad = function (data) {
+    window.pin.generatePins(data);
+    window.pin.hidePins(window.pin.pinsList);
+
+    mapPinMain.addEventListener('mouseup', window.map.activateMap);
+
+    window.showCard(window.pin.pinsList, data);
+  };
+
+  window.backend.load(onSuccessLoad, window.backend.onError);
 
 
   /*

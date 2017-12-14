@@ -65,4 +65,17 @@
   formControlPrice.addEventListener('invalid', function () {
     customFormValidation(formControlPrice);
   });
+
+  // Form Submit
+  var form = document.querySelector('.notice__form');
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.save(new FormData(form), function () {
+      form.reset();
+    }, window.backend.onError);
+
+  });
+
 })();
