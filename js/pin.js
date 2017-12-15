@@ -8,7 +8,6 @@
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
   // Map pins Container
   var mapPinsContainer = document.querySelector('.map__pins');
-  var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
   // Create Marker
   var createPin = function (post) {
@@ -23,8 +22,8 @@
   window.pin = {
 
     // Hide pins
-    hidePins: function () {
-      mapPins.forEach(function (elem) {
+    hidePins: function (pins) {
+      pins.forEach(function (elem) {
         window.util.hideElement(elem);
       });
     },
@@ -37,15 +36,18 @@
     },
 
     // Generate Pins
-    generatePins: function () {
+    generatePins: function (data) {
       var fragment = document.createDocumentFragment();
 
-      for (var i = 0; i < window.data.length; i++) {
-        fragment.appendChild(createPin(window.data[i]));
+      for (var i = 0; i < data.length; i++) {
+        fragment.appendChild(createPin(data[i]));
       }
 
-      return mapPinsContainer.appendChild(fragment);
-    }(),
+      mapPinsContainer.appendChild(fragment);
+
+      // All the pins except the main one
+      window.pin.pinsList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    },
 
   };
 

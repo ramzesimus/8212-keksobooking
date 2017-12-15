@@ -1,20 +1,36 @@
 'use strict';
 
 (function () {
-  var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-  window.showCard = function (pins, callback) {
+  var map = document.querySelector('.map');
 
-    if (typeof callback === 'function') {
-      pins.forEach(function (elem, i) {
+  window.showCard = function (pins, data) {
 
-        elem.addEventListener('click', function () {
-          window.pin.removeActivePins(mapPins);
-          elem.classList.add('map__pin--active');
-          callback(i);
-        });
+    pins.forEach(function (elem, i) {
+      elem.addEventListener('click', function () {
 
+        // deactivate all active pins
+        window.pin.removeActivePins(pins);
+        // activate the current pin
+        elem.classList.add('map__pin--active');
+
+        // remove popup
+        var mapCard = document.querySelector('.map__card');
+        if (mapCard) {
+          mapCard.remove();
+        }
+
+        // add newly generated map card
+        map.insertBefore(window.card.createMapCard(data[i]), map.querySelector('.map__filters-container'));
+
+        // close on esc key
+        document.addEventListener('keydown', window.card.onPopupEscPress);
+
+        // close on click
+        window.card.onPopupCloseClick();
       });
-    }
+
+    });
+
   };
 })();

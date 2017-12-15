@@ -847,3 +847,24 @@ textarea:focus
 {
     background-position: -10px -10px;
 }
+
+/* Custom Styles */
+.form-alert {
+  background-color: red;
+  position: fixed;
+  z-index: 9;
+  left: 50%;
+  top: 0;
+  width: 600px;
+  margin-left: -300px;
+  padding: 40px;
+  box-sizing: border-box;
+  transform: translateY(-100%);
+  transition: all .2s ease;
+  opacity: 0;
+  color: white;
+}
+  .form-alert--show {
+    transform: translateY(0);
+    opacity: 1;
+  }
