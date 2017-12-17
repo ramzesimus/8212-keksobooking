@@ -78,7 +78,7 @@
     var controlSelectFilter = function (control, type) {
       if (control.value !== 'any') {
         filteredData = filteredData.filter(function (post) {
-          return post.offer[type] === control.value;
+          return post.offer[type].toString() === control.value;
         });
       }
       return filteredData;
