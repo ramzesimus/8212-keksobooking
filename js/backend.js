@@ -3,6 +3,7 @@
 (function () {
   var SERVER_URL = 'https://1510.dump.academy/keksobooking';
   var TIMEOUT = 10000;
+  var SUCCESS_CODE = 200;
   var alertMessages = {
     errorLoad: 'Произошла ошибка',
     errorConnection: 'Произошла ошибка соединения',
@@ -14,7 +15,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_CODE) {
         onLoad(xhr.response);
       } else {
         onError(alertMessages.errorLoad);

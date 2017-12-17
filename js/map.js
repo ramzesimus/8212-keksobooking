@@ -1,17 +1,11 @@
 'use strict';
 
 (function () {
-  var MAP_PIN_SIZES = {
-    width: 62,
-    height: 92
-  };
 
-  var COORDS_LIMITS = {
-    top: 100,
-    bottom: 500
-  };
+  var PRICE_FROM = 10000;
+  var PRICE_TO = 50000;
 
-  // Show map
+  // Map
   var map = document.querySelector('.map');
 
   // Map Pin Main
@@ -52,6 +46,7 @@
    * Generate pins, show map and cards if data loaded
    */
   var onSuccessLoad = function (data) {
+    dataCopy = data.slice();
     window.pin.generatePins(data);
     window.pin.hidePins(window.pin.pinsList);
 
@@ -63,77 +58,77 @@
   window.backend.load(onSuccessLoad, window.backend.onError);
 
 
-  /*
-   * Move Main Pin
-   */
-  var formControlAddress = document.querySelector('#address');
-  mapPinMain.style.zIndex = 2;
+  // Filter Fields
+  var filterForm = document.querySelector('.map__filters');
+  var typeControl = document.querySelector('#housing-type');
+  var priceControl = document.querySelector('#housing-price');
+  var roomsControl = document.querySelector('#housing-rooms');
+  var guestsControl = document.querySelector('#housing-guests');
+  var featuresControls = document.querySelectorAll('#housing-features input[type="checkbox"]');
+  var dataCopy = [];
 
-  var dragPinLimits = {
-    minX: 0,
-    minY: COORDS_LIMITS.top - MAP_PIN_SIZES.height / 2,
-    maxX: map.clientWidth,
-    maxY: COORDS_LIMITS.bottom - MAP_PIN_SIZES.height / 2
-  };
+  // Updates map pins
+  var updateMapPins = function () {
+    var filteredData = dataCopy;
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.pin.removeAllPins(pins);
+    window.card.closePopup();
 
-  // Get Initial Map Pin coordinates
-  var formControlAddressCoords = {
-    x: mapPinMain.offsetLeft,
-    y: mapPinMain.offsetTop
-  };
-
-  // Set initial Main Pin coordinates as value for Address Field
-  formControlAddress.value = 'x: ' + formControlAddressCoords.x + ', ' + 'y: ' + (formControlAddressCoords.y + MAP_PIN_SIZES.height / 2);
-
-  mapPinMain.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      // Get new coords for Address field
-      formControlAddressCoords = {
-        x: mapPinMain.offsetLeft - shift.x,
-        y: mapPinMain.offsetTop - shift.y
-      };
-
-      if ((formControlAddressCoords.x >= dragPinLimits.minX && formControlAddressCoords.x <= dragPinLimits.maxX) &&
-      (formControlAddressCoords.y >= dragPinLimits.minY && formControlAddressCoords.y <= dragPinLimits.maxY)) {
-        mapPinMain.style.left = formControlAddressCoords.x + 'px';
-        mapPinMain.style.top = formControlAddressCoords.y + 'px';
-
-        // Set new coords for Address field
-        formControlAddress.value = 'x: ' + formControlAddressCoords.x + ', ' + 'y: ' + (formControlAddressCoords.y + MAP_PIN_SIZES.height / 2);
+    // Filter select field values
+    var controlSelectFilter = function (control, type) {
+      if (control.value !== 'any') {
+        filteredData = filteredData.filter(function (post) {
+          return post.offer[type].toString() === control.value;
+        });
       }
-
-
+      return filteredData;
     };
 
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('moveup', onMouseUp);
+    // Filter select range values
+    var controlRangeFilter = function (control) {
+      filteredData = filteredData.filter(function (post) {
+        switch (control.value) {
+          case 'low':
+            return post.offer.price <= PRICE_FROM;
+          case 'middle':
+            return post.offer.price > PRICE_FROM && post.offer.price < PRICE_TO;
+          case 'high':
+            return post.offer.price >= PRICE_TO;
+          default:
+            return true;
+        }
+      });
+      return filteredData;
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    // Filter checkboxes
+    var controlCheckboxFilter = function (controls) {
+      controls.forEach(function (element) {
+        if (element.checked) {
+          filteredData = filteredData.filter(function (post) {
+            return post.offer.features.indexOf(element.value) !== -1;
+          });
+        }
+      });
 
+      return filteredData;
+    };
+
+    // Fireup filter functions for each form control
+    controlSelectFilter(typeControl, 'type');
+    controlRangeFilter(priceControl);
+    controlSelectFilter(roomsControl, 'rooms');
+    controlSelectFilter(guestsControl, 'guests');
+    controlCheckboxFilter(featuresControls);
+
+    // Generate all pins based on filtered data
+    window.pin.generatePins(filteredData);
+    // Show card for newly generated pins
+    window.showCard(document.querySelectorAll('.map__pin:not(.map__pin--main)'), filteredData);
+  };
+
+  filterForm.addEventListener('change', function () {
+    window.debounce(updateMapPins);
   });
 
 })();
