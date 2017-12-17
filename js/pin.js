@@ -36,6 +36,7 @@
       });
     },
 
+    // Remove all pins
     removeAllPins: function (arr) {
       arr.forEach(function (elem) {
         elem.remove();
