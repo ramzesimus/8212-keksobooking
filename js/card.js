@@ -50,7 +50,7 @@
       mapCardElement.querySelector('.popup__features + p').textContent = post.offer.description;
       mapCardElement.querySelector('.popup__avatar').src = post.author.avatar;
 
-      if (post.offer.features.length !== 0) {
+      if (post.offer.features.length > 0) {
         getOfferFeatures(post.offer.features, featuresContainer);
       }
 
