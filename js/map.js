@@ -86,25 +86,18 @@
 
     // Filter select range values
     var controlRangeFilter = function (control) {
-      switch (control.value) {
-        case 'any':
-          break;
-        case 'low':
-          filteredData = filteredData.filter(function (post) {
+      filteredData = filteredData.filter(function (post) {
+        switch (control.value) {
+          case 'low':
             return post.offer.price <= PRICE_FROM;
-          });
-          break;
-        case 'middle':
-          filteredData = filteredData.filter(function (post) {
+          case 'middle':
             return post.offer.price > PRICE_FROM && post.offer.price < PRICE_TO;
-          });
-          break;
-        case 'high':
-          filteredData = filteredData.filter(function (post) {
+          case 'high':
             return post.offer.price >= PRICE_TO;
-          });
-          break;
-      }
+          default:
+            return true;
+        }
+      });
       return filteredData;
     };
 

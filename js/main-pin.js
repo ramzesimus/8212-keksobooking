@@ -75,8 +75,8 @@
 
     };
 
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
+    var onMouseUp = function (e) {
+      e.preventDefault();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('moveup', onMouseUp);
