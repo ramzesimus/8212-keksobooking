@@ -78,6 +78,7 @@
         window.util.hideElement(popup);
       }
       window.pin.removeActivePins(window.pin.pinsList);
+      document.removeEventListener('keydown', window.card.onPopupEscPress);
     },
   };
 
