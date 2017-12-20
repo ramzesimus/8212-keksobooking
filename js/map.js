@@ -21,7 +21,7 @@
   // Activate map
   window.map = {
 
-    activateMap: function () {
+    activate: function () {
 
       // show map
       map.classList.remove('map--faded');
@@ -47,10 +47,10 @@
    */
   var onSuccessLoad = function (data) {
     dataCopy = data.slice();
-    window.pin.generatePins(data);
-    window.pin.hidePins(window.pin.pinsList);
+    window.pin.generate(data);
+    window.pin.hide(window.pin.pinsList);
 
-    mapPinMain.addEventListener('mouseup', window.map.activateMap);
+    mapPinMain.addEventListener('mouseup', window.map.activate);
 
     window.showCard(window.pin.pinsList, data);
   };
@@ -71,7 +71,7 @@
   var updateMapPins = function () {
     var filteredData = dataCopy;
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.pin.removeAllPins(pins);
+    window.pin.removeAll(pins);
     window.card.closePopup();
 
     // Filter select field values
@@ -86,18 +86,16 @@
 
     // Filter select range values
     var controlRangeFilter = function (control) {
-      filteredData = filteredData.filter(function (post) {
-        switch (control.value) {
-          case 'low':
-            return post.offer.price <= PRICE_FROM;
-          case 'middle':
-            return post.offer.price > PRICE_FROM && post.offer.price < PRICE_TO;
-          case 'high':
-            return post.offer.price >= PRICE_TO;
-          default:
-            return true;
-        }
-      });
+      if (control.value !== 'any') {
+        filteredData = filteredData.filter(function (post) {
+          var priceControlValueSelection = {
+            'low': post.offer.price <= PRICE_FROM,
+            'middle': post.offer.price > PRICE_FROM && post.offer.price < PRICE_TO,
+            'high': post.offer.price >= PRICE_TO
+          };
+          return priceControlValueSelection[priceControl.value];
+        });
+      }
       return filteredData;
     };
 
@@ -122,7 +120,7 @@
     controlCheckboxFilter(featuresControls);
 
     // Generate all pins based on filtered data
-    window.pin.generatePins(filteredData);
+    window.pin.generate(filteredData);
     // Show card for newly generated pins
     window.showCard(document.querySelectorAll('.map__pin:not(.map__pin--main)'), filteredData);
   };

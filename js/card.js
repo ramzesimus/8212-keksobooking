@@ -5,22 +5,11 @@
   // Map Card Template
   var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 
-  var convertOfferType = function (offerType) {
-    var convertedType = '';
-
-    switch (offerType) {
-      case 'flat':
-        convertedType = 'Квартира';
-        break;
-      case 'bungalo':
-        convertedType = 'Бунгало';
-        break;
-      case 'house':
-        convertedType = 'Дом';
-        break;
-    }
-
-    return convertedType;
+  var localizedOfferType = {
+    'flat': 'Квартира',
+    'bungalo': 'Лачуга',
+    'house': 'Дом',
+    'palace': 'Дворец',
   };
 
   var getOfferFeatures = function (array, element) {
@@ -34,7 +23,7 @@
 
   window.card = {
 
-    createMapCard: function (post) {
+    create: function (post) {
       var mapCardElement = mapCardTemplate.cloneNode(true);
 
       // Features popup
@@ -44,7 +33,7 @@
       mapCardElement.querySelector('h3').textContent = post.offer.title;
       mapCardElement.querySelector('h3 + p > small').textContent = post.offer.address;
       mapCardElement.querySelector('.popup__price > span').textContent = post.offer.price;
-      mapCardElement.querySelector('h4').textContent = convertOfferType(post.offer.type);
+      mapCardElement.querySelector('h4').textContent = localizedOfferType[post.offer.type];
       mapCardElement.querySelector('h4 + p').textContent = post.offer.rooms + ' для ' + post.offer.guests + ' гостей';
       mapCardElement.querySelector('h4 + p + p').textContent = 'Заезд после ' + post.offer.checkin + ' , выезд до ' + post.offer.checkout;
       mapCardElement.querySelector('.popup__features + p').textContent = post.offer.description;
@@ -68,7 +57,7 @@
       var popupClose = document.querySelector('.popup__close');
       popupClose.addEventListener('click', function () {
         window.util.hideElement(popup);
-        window.pin.removeActivePins(window.pin.pinsList);
+        window.pin.removeActive(window.pin.pinsList);
       });
     },
 
@@ -77,7 +66,7 @@
       if (popup) {
         window.util.hideElement(popup);
       }
-      window.pin.removeActivePins(window.pin.pinsList);
+      window.pin.removeActive(window.pin.pinsList);
       document.removeEventListener('keydown', window.card.onPopupEscPress);
     },
   };

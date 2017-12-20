@@ -34,7 +34,11 @@
   };
 
   // Set initial Main Pin coordinates as value for Address Field
-  formControlAddress.value = 'x: ' + formControlAddressCoords.x + ', ' + 'y: ' + (formControlAddressCoords.y + MAP_PIN_SIZES.height / 2);
+  // will be needed in the form
+  window.setMainPinCoords = function () {
+    formControlAddress.value = 'x: ' + formControlAddressCoords.x + ', ' + 'y: ' + (formControlAddressCoords.y + MAP_PIN_SIZES.height / 2);
+  };
+  window.setMainPinCoords();
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -71,7 +75,6 @@
         // Set new coords for Address field
         formControlAddress.value = 'x: ' + formControlAddressCoords.x + ', ' + 'y: ' + (formControlAddressCoords.y + MAP_PIN_SIZES.height / 2);
       }
-
 
     };
 
