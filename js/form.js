@@ -194,8 +194,6 @@
 
     if (invalidFormControl.validity.valueMissing) {
       invalidFormControl.setCustomValidity('Обязательное поле');
-    } else {
-      invalidFormControl.setCustomValidity('');
     }
   }, true);
 
