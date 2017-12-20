@@ -23,28 +23,28 @@
   window.pin = {
 
     // Hide pins
-    hidePins: function (pins) {
+    hide: function (pins) {
       pins.forEach(function (elem) {
         window.util.hideElement(elem);
       });
     },
 
     // Remove active pins
-    removeActivePins: function (arr) {
+    removeActive: function (arr) {
       arr.forEach(function (elem) {
         elem.classList.remove('map__pin--active');
       });
     },
 
     // Remove all pins
-    removeAllPins: function (arr) {
+    removeAll: function (arr) {
       arr.forEach(function (elem) {
         elem.remove();
       });
     },
 
     // Generate Pins
-    generatePins: function (data) {
+    generate: function (data) {
       var fragment = document.createDocumentFragment();
       var pinCount = data.length > PIN_COUNT ? PIN_COUNT : data.length;
 

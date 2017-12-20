@@ -10,7 +10,7 @@
       elem.addEventListener('click', function () {
 
         // deactivate all active pins
-        window.pin.removeActivePins(pins);
+        window.pin.removeActive(pins);
         // activate the current pin
         elem.classList.add('map__pin--active');
 
@@ -21,7 +21,7 @@
         }
 
         // add newly generated map card
-        map.insertBefore(window.card.createMapCard(data[i]), map.querySelector('.map__filters-container'));
+        map.insertBefore(window.card.create(data[i]), map.querySelector('.map__filters-container'));
 
         // close on esc key
         document.addEventListener('keydown', window.card.onPopupEscPress);
