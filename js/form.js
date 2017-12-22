@@ -107,19 +107,6 @@
     }
   };
 
-  // Additional validation for min length (Edge doesn't support minlength)
-  formControlTitle.addEventListener('input', function (evt) {
-    var target = evt.target;
-
-    if (target.value.length < FORM_CONTROL_TITLE_MIN_LENGTH) {
-      target.style.borderColor = FORM_CONTROL_ERROR_COLOR;
-      target.setCustomValidity('Длина заголовка не менее ' + FORM_CONTROL_TITLE_MIN_LENGTH + ' символов');
-    } else {
-      target.style.borderColor = FORM_CONTROL_DEFAULT_COLOR;
-      target.setCustomValidity('');
-    }
-  });
-
   // Price Control validation
   var onFormControlPriceInvalid = function () {
     if (formControlPrice.validity.rangeUnderflow) {
@@ -148,6 +135,19 @@
 
   // Title
   formControlTitle.addEventListener('input', onFormControlTitleValid);
+
+  // Additional validation for min length (Edge doesn't support minlength)
+  formControlTitle.addEventListener('input', function (evt) {
+    var target = evt.target;
+
+    if (target.value.length < FORM_CONTROL_TITLE_MIN_LENGTH) {
+      target.style.borderColor = FORM_CONTROL_ERROR_COLOR;
+      target.setCustomValidity('Длина заголовка не менее ' + FORM_CONTROL_TITLE_MIN_LENGTH + ' символов');
+    } else {
+      target.style.borderColor = FORM_CONTROL_DEFAULT_COLOR;
+      target.setCustomValidity('');
+    }
+  });
 
   formControlTitle.addEventListener('input', function () {
     resetInvalidFormControlStyle(formControlTitle);
